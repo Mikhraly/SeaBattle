@@ -168,7 +168,7 @@ public class BattleField {
         }
     }
 
-    private List<String> convertCoordinate(String shipCoordinate) throws IOException {
+    private List<String> convertCoordinate(String shipCoordinate) throws IOException, IndexOutOfBoundsException {
         List<String> coordinate = new ArrayList<>(Arrays.asList(shipCoordinate.split(" ")));
         List<String> converted = new ArrayList<>();
         for (String current : coordinate) {
@@ -181,12 +181,10 @@ public class BattleField {
 
     private void checkCoordinateCorrect(List<String> shipCoordinate) throws IOException {
         for (String current : shipCoordinate) {
-            if (Integer.parseInt(current.split(",")[1]) > 0 &&
-                    Integer.parseInt(current.split(",")[1]) < 11 &&
-                    Integer.parseInt(current.split(",")[0]) > 0 &&
-                    Integer.parseInt(current.split(",")[0]) < 11)
-                continue;
-            else
+            if (Integer.parseInt(current.split(",")[1]) < 0 ||
+                    Integer.parseInt(current.split(",")[1]) > 11 ||
+                    Integer.parseInt(current.split(",")[0]) < 0 ||
+                    Integer.parseInt(current.split(",")[0]) > 11)
                 throw new IOException("Неверный формат координат");
         }
     }
@@ -282,7 +280,7 @@ public class BattleField {
         }
     }
 
-    public boolean fireShip(String coordinate) throws IOException {
+    public int fireShip(String coordinate) throws IOException, IndexOutOfBoundsException {
         List<String> coordinateList = convertCoordinate(coordinate);
         checkCoordinates(coordinateList);
         coordinate = coordinateList.get(0);
@@ -291,44 +289,62 @@ public class BattleField {
 
         switch (field[str][col]) {
             case "O" -> {
+                field[str][col] = "X";
                 fieldMask[str][col] = "X";
                 removeCoordinateFromShipList(coordinate, ships1);
                 removeCoordinateFromShipList(coordinate, ships2);
                 removeCoordinateFromShipList(coordinate, ships3);
                 removeCoordinateFromShipList(coordinate, ships4);
-                return true;
+
+                int notNullCounter = 0;
+                for (Ship ship : ships1)
+                    if (ship.getShipCoordinate().size() != 0) notNullCounter++;
+                for (Ship ship : ships2)
+                    if (ship.getShipCoordinate().size() != 0) notNullCounter++;
+                for (Ship ship : ships3)
+                    if (ship.getShipCoordinate().size() != 0) notNullCounter++;
+                for (Ship ship : ships4)
+                    if (ship.getShipCoordinate().size() != 0) notNullCounter++;
+
+                if (notNullCounter != 0)
+                    return 1;
+                else
+                    return -1;
             }
             case " " -> {
+                field[str][col] = "-";
                 fieldMask[str][col] = "-";
                 System.out.println("Промах");
-                return false;
+                return 0;
             }
             case "X" -> {
                 System.out.println("Промах. Зона уже была поражена!");
-                return false;
+                return 0;
             }
             case "-" -> {
                 System.out.println("Промах. Уже бил в эту зону!");
-                return false;
+                return 0;
             }
             default -> {
                 System.out.println("Ошибка! Неизвестное значение в поле!");
-                return false;
+                return 0;
             }
         }
     }
 
     private void removeCoordinateFromShipList(String coordinate, List<Ship> ships) {
-        for (int i = 0; i < ships.size(); i++) {
-            ships.get(i).getShipCoordinate().remove(coordinate);
-            if (ships.get(i).getShipCoordinate().size() == 0) {
-                System.out.println("Утопил корабль!");
-                for (String halo : ships.get(i).getHaloCoordinate()) {
-                    fieldMask[Integer.parseInt(halo.split(",")[0])]
-                            [Integer.parseInt(halo.split(",")[1])] = "-";
+        for (Ship ship : ships) {
+            if (ship.getShipCoordinate().contains(coordinate)) {
+                ship.getShipCoordinate().remove(coordinate);
+                if (ship.getShipCoordinate().size() != 0) {
+                    System.out.println("Попадание!");
+                } else {
+                    System.out.println("Потопил!");
+                    for (String halo : ship.getHaloCoordinate()) {
+                        fieldMask[Integer.parseInt(halo.split(",")[0])]
+                                [Integer.parseInt(halo.split(",")[1])] = "-";
+                    }
                 }
-            } else {
-                System.out.println("Попадание!");
             }
         }
     }

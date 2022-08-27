@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class SeaBattle {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         System.out.println("\n\t--- Морской бой ---\n");
 
         BattleField field1 = new BattleField();
@@ -64,53 +64,53 @@ public class SeaBattle {
             if (player == 1) {
                 field2.printFieldMask();
 
-                boolean isFired = false;
+                int fireResult;
                 while (true) {
                     System.out.print("\nОгонь по координате --> ");
                     String coordinate = scanner.nextLine();
                     try {
-                        isFired = field2.fireShip(coordinate);
+                        fireResult = field2.fireShip(coordinate);
                         break;
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Ошибка ввода. Попробуй ещё...");
                     }
                 }
 
-                if (isFired) {
-                    if (field2.getShips1().size() == 0 && field2.getShips2().size() == 0 &&
-                            field2.getShips3().size() == 0 && field2.getShips4().size() == 0) {
-                        System.out.println("ПОБЕДА!!! Первый игрок выиграл!");
-                        player = 0;
-                    } else {
-                        System.out.println("Первый игрок продолжает");
-                    }
+                if (fireResult == 1) {
+                    System.out.println("Первый игрок продолжает");
+                } else if (fireResult == -1) {
+                    System.out.println("ПОБЕДА!!! Первый игрок выиграл!");
+                    player = 0;
                 } else {
                     System.out.println("Ход переходит ко второму игроку");
                     player = 2;
                 }
-            } else if (player == 2) {
+            }
+
+            if (player == 2) {
                 field1.printFieldMask();
 
-                boolean isFired = false;
+                int fireResult;
                 while (true) {
                     System.out.print("\nОгонь по координате --> ");
                     String coordinate = scanner.nextLine();
                     try {
-                        isFired = field1.fireShip(coordinate);
+                        fireResult = field1.fireShip(coordinate);
                         break;
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Ошибка ввода. Попробуй ещё...");
                     }
                 }
 
-                if (isFired) {
-                    if (field1.getShips1().size() == 0 && field1.getShips2().size() == 0 &&
-                            field1.getShips3().size() == 0 && field1.getShips4().size() == 0) {
-                        System.out.println("ПОБЕДА!!! Второй игрок выиграл!");
-                        player = 0;
-                    }else {
-                        System.out.println("Второй игрок продолжает");
-                    }
+                if (fireResult == 1) {
+                    System.out.println("Второй игрок продолжает");
+                } else if (fireResult == -1) {
+                    System.out.println("ПОБЕДА!!! Второй игрок выиграл!");
+                    player = 0;
                 } else {
                     System.out.println("Ход переходит к первому игроку");
                     player = 1;
