@@ -40,21 +40,6 @@ public class BattleField {
     private List<Ship> ships3 = new ArrayList<>();
     private List<Ship> ships4 = new ArrayList<>();
 
-    public List<Ship> getShips1() {
-        return ships1;
-    }
-
-    public List<Ship> getShips2() {
-        return ships2;
-    }
-
-    public List<Ship> getShips3() {
-        return ships3;
-    }
-
-    public List<Ship> getShips4() {
-        return ships4;
-    }
 
     public void printField() {
         System.out.println();
@@ -192,10 +177,10 @@ public class BattleField {
     private void checkCoordinateLinear(List<String> shipCoordinate) throws IOException {
         int strCountEquals = 0;
         int colCountEquals = 0;
-        for (int i = 0; i < shipCoordinate.size(); i++) {
-            if (shipCoordinate.get(0).split(",")[0].equals(shipCoordinate.get(i).split(",")[0]))
+        for (String coordinate : shipCoordinate) {
+            if (shipCoordinate.get(0).split(",")[0].equals(coordinate.split(",")[0]))
                 strCountEquals++;
-            if (shipCoordinate.get(0).split(",")[1].equals(shipCoordinate.get(i).split(",")[1]))
+            if (shipCoordinate.get(0).split(",")[1].equals(coordinate.split(",")[1]))
                 colCountEquals++;
         }
         if (strCountEquals != shipCoordinate.size() && colCountEquals != shipCoordinate.size())
@@ -227,8 +212,8 @@ public class BattleField {
                 for (int c = col-1; c <= col+1; c++) {
                     if (s > 0 && s < 11 && c > 0 && c < 11) {
                         if (
-                                (!ship.contains(Integer.toString(s) + "," + Integer.toString(c)) &&
-                                        !field[s][c].equals(" ")) || field[s][c].equals("O")
+                                (!ship.contains(s + "," + c) && !field[s][c].equals(" "))
+                                        || field[s][c].equals("O")
                         )
                             return false;
                     }
