@@ -13,7 +13,7 @@ public class SeaBattle {
 
         while (field1.getCountShip1() + field1.getCountShip2() + field1.getCountShip3() + field1.getCountShip4() != 0) {
             try {
-                System.out.println("\nПервый игрок, вводи корабли. Второй игррок, не смотри!");
+                System.out.println("\nПервый игрок, вводи корабли. Второй игрок, не смотри!");
                 System.out.print("Осталось кораблей: " +
                         "четырехпалубных - " + field1.getCountShip4() + ", " +
                         "трехпалубных - " + field1.getCountShip3() + ", " +

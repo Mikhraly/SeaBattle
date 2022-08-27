@@ -181,10 +181,10 @@ public class BattleField {
 
     private void checkCoordinateCorrect(List<String> shipCoordinate) throws IOException {
         for (String current : shipCoordinate) {
-            if (Integer.parseInt(current.split(",")[1]) < 0 ||
-                    Integer.parseInt(current.split(",")[1]) > 11 ||
-                    Integer.parseInt(current.split(",")[0]) < 0 ||
-                    Integer.parseInt(current.split(",")[0]) > 11)
+            if (Integer.parseInt(current.split(",")[1]) < 1 ||
+                    Integer.parseInt(current.split(",")[1]) > 10 ||
+                    Integer.parseInt(current.split(",")[0]) < 1 ||
+                    Integer.parseInt(current.split(",")[0]) > 10)
                 throw new IOException("Неверный формат координат");
         }
     }
