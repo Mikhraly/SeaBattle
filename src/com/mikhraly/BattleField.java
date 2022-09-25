@@ -157,8 +157,8 @@ public class BattleField {
         List<String> coordinate = new ArrayList<>(Arrays.asList(shipCoordinate.split(" ")));
         List<String> converted = new ArrayList<>();
         for (String current : coordinate) {
-            String str = current.split(",")[1];
-            String col = convertColumnWordToNumber(current.split(",")[0]);
+            String str = current.split("[^\\d*]")[1];
+            String col = convertColumnWordToNumber(current.split("\\d*")[0]);
             converted.add(str + "," + col);
         }
         return converted;
